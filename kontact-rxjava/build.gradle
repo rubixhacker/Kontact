@@ -34,7 +34,7 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile project(path: ':kontact')
+    provided project(path: ':kontact')
     testCompile 'junit:junit:4.12'
 
     compile 'io.reactivex:rxjava:1.2.9'
