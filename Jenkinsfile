@@ -10,5 +10,11 @@ pipeline {
                 sh './gradlew clean assemble'
             }
         }
+
+       stage('Archive') {
+           steps {
+                archiveArtifacts './kontact/build/**.aar'
+            }
+       }
     }
 }
