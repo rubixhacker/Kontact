@@ -10,7 +10,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
-        versionName "1.0"
+        versionName "0.1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -40,6 +40,7 @@ dependencies {
 
     kapt "com.google.auto.value:auto-value:1.4"
     provided "com.google.auto.value:auto-value:1.4"
+    kapt 'com.gabrielittner.auto.value:auto-value-with:1.0.0'
     kapt 'com.gabrielittner.auto.value:auto-value-cursor:1.0.1'
     compile 'com.gabrielittner.auto.value:auto-value-cursor-annotations:1.0.1'
 }

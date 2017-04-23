@@ -9,6 +9,8 @@ import com.gabrielittner.auto.value.cursor.ColumnName;
 import com.google.auto.value.AutoValue;
 import com.hackedcube.kontact.columnadapters.BooleanIntAdapter;
 
+import java.util.List;
+
 @AutoValue
 public abstract class Kontact {
 
@@ -59,6 +61,9 @@ public abstract class Kontact {
     @ColumnName(ContactsContract.Contacts.SEND_TO_VOICEMAIL)
     public abstract Boolean sendToVoicemail();
 
+    @Nullable
+    public abstract List<PhoneNumber> phoneNumbers();
+
     public static Kontact createfromCursor(Cursor cursor) {
         return AutoValue_Kontact.createFromCursor(cursor);
     }
@@ -67,6 +72,9 @@ public abstract class Kontact {
         return new AutoValue_Kontact.Builder();
     }
 
+    public abstract Builder toBuilder();
+
+    public abstract Kontact withPhoneNumbers(List<PhoneNumber> phoneNumbers);
 
     @AutoValue.Builder
     public abstract static class Builder {
@@ -95,6 +103,8 @@ public abstract class Kontact {
         public abstract Builder customRingtone(String customRingtone);
 
         public abstract Builder sendToVoicemail(Boolean sendToVoicemail);
+
+        public abstract Builder phoneNumbers(List<PhoneNumber> phoneNumbers);
 
         public abstract Kontact build();
     }
