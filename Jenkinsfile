@@ -6,6 +6,7 @@ pipeline {
             steps {
                 checkout scm
                 sh 'chmod +x gradlew'
+                sh './gradlew dependencies || true'
                 sh './gradlew clean assemble'
             }
         }
