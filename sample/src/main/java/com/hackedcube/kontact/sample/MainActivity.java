@@ -33,7 +33,6 @@ public class MainActivity extends Activity {
             }
         });
 
-
         List<Kontact> kontacts = ContactUtils.queryAllContacts(this);
 
         Log.d("Kontacts", "Kontacts Count: " + kontacts);

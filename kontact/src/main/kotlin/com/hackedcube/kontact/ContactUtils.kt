@@ -1,4 +1,5 @@
 @file:JvmName("ContactUtils")
+@file:JvmMultifileClass
 
 package com.hackedcube.kontact
 
@@ -6,7 +7,6 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.ContactsContract
-
 
 fun Context.queryAllContacts(): List<Kontact> {
     contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null).use {
@@ -34,6 +34,14 @@ private fun kontactFromCursor(context: Context, cursor: Cursor): Kontact {
 
             kontact = kontact.withPhoneNumbers(phoneNumbers)
         }
+    }
+
+    context.contentResolver.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?", arrayOf(kontact.id()), null).use { emailCursor ->
+        val emailAddresses = generateSequence { if (emailCursor.moveToNext()) emailCursor else null }
+                .map { EmailAddress.createfromCursor(it) }
+                .toList()
+
+        kontact = kontact.withEmailAddresses(emailAddresses)
     }
 
     return kontact
