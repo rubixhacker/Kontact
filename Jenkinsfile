@@ -3,8 +3,10 @@ pipeline {
 
     stages {
         stage('Build') {
-            scm checkout
-            sh '.gradlew clean assemble'
+            steps {
+                scm checkout
+                sh '.gradlew clean assemble'
+            }
         }
     }
 }
