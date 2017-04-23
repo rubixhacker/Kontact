@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion 25
@@ -25,6 +26,34 @@ android {
     }
 
     publishNonDefault true
+}
+
+publishing {
+    publications {
+        aar(MavenPublication) {
+            groupId = "com.hackedcube"
+            artifactId project.name
+            version = project.version
+            artifact "${project.buildDir}/outputs/aar/${project.name}-release.aar"
+
+
+            pom.withXml {
+                def root = asNode()
+
+
+                // adds dependencies
+                def dependenciesNode = root.appendNode('dependencies')
+                configurations.compile.allDependencies.each { dp ->
+                    if (dp.group) {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', dp.group)
+                        dependencyNode.appendNode('artifactId', dp.name)
+                        dependencyNode.appendNode('version', dp.version)
+                    }
+                }
+            }
+        }
+    }
 }
 
 dependencies {
