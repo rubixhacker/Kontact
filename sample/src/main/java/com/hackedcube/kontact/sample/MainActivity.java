@@ -10,7 +10,6 @@ import android.widget.Button;
 
 import com.hackedcube.kontact.ContactUtils;
 import com.hackedcube.kontact.Kontact;
-import com.hackedcube.kontact.rxjava.RxContactUtils;
 
 import java.util.List;
 
