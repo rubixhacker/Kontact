@@ -29,11 +29,6 @@ android {
     publishNonDefault true
 }
 
-configurations {
-    optional
-    compile.extendsFrom optional
-}
-
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -41,16 +36,13 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     kapt "com.google.auto.value:auto-value:1.4"
     provided "com.google.auto.value:auto-value:1.4"
     kapt 'com.gabrielittner.auto.value:auto-value-with:1.0.0'
     kapt 'com.gabrielittner.auto.value:auto-value-cursor:1.0.1'
     compile 'com.gabrielittner.auto.value:auto-value-cursor-annotations:1.0.1'
-
-    optional 'io.reactivex.rxjava2:rxjava:2.0.9'
-    optional 'io.reactivex:rxjava:1.2.9'
 }
 repositories {
     mavenCentral()
