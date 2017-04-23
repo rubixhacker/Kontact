@@ -29,6 +29,11 @@ android {
     publishNonDefault true
 }
 
+configurations {
+    optional
+    compile.extendsFrom optional
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -43,6 +48,9 @@ dependencies {
     kapt 'com.gabrielittner.auto.value:auto-value-with:1.0.0'
     kapt 'com.gabrielittner.auto.value:auto-value-cursor:1.0.1'
     compile 'com.gabrielittner.auto.value:auto-value-cursor-annotations:1.0.1'
+
+    optional 'io.reactivex.rxjava2:rxjava:2.0.9'
+    optional 'io.reactivex:rxjava:1.2.9'
 }
 repositories {
     mavenCentral()

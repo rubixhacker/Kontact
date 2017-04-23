@@ -6,7 +6,7 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.ContactsContract
-
+import io.reactivex.Single
 
 fun Context.queryAllContacts(): List<Kontact> {
     contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null).use {
@@ -23,6 +23,22 @@ fun Context.getContactFromId(uri: Uri): Kontact? {
     }
 }
 
+fun Context.allContacts(): Single<List<Kontact>> {
+    return Single.fromCallable { queryAllContacts() }
+}
+
+fun Context.allContactsSingle(): rx.Single<List<Kontact>> {
+    return rx.Single.fromCallable { queryAllContacts() }
+}
+
+fun Context.contact(uri: Uri): Single<Kontact> {
+    return Single.fromCallable { getContactFromId(uri) }
+}
+
+fun Context.contactSingle(uri: Uri): rx.Single<Kontact> {
+    return rx.Single.fromCallable { getContactFromId(uri) }
+}
+
 private fun kontactFromCursor(context: Context, cursor: Cursor): Kontact {
     var kontact = Kontact.createfromCursor(cursor)
 
@@ -34,6 +50,14 @@ private fun kontactFromCursor(context: Context, cursor: Cursor): Kontact {
 
             kontact = kontact.withPhoneNumbers(phoneNumbers)
         }
+    }
+
+    context.contentResolver.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?", arrayOf(kontact.id()), null).use { emailCursor ->
+        val emailAddresses = generateSequence { if (emailCursor.moveToNext()) emailCursor else null }
+                .map { EmailAddress.createfromCursor(it) }
+                .toList()
+
+        kontact = kontact.withEmailAddresses(emailAddresses)
     }
 
     return kontact
