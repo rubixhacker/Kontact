@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'maven-publish'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 25
@@ -28,32 +28,43 @@ android {
     publishNonDefault true
 }
 
-publishing {
-    publications {
-        aar(MavenPublication) {
-            groupId = "com.hackedcube"
-            artifactId project.name
-            version = project.version
-            artifact "${project.buildDir}/outputs/aar/${project.name}-release.aar"
 
-
-            pom.withXml {
-                def root = asNode()
-
-                // adds dependencies
-                def dependenciesNode = root.appendNode('dependencies')
-                configurations.compile.allDependencies.each { dp ->
-                    if (dp.group) {
-                        def dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', dp.group)
-                        dependencyNode.appendNode('artifactId', dp.name)
-                        dependencyNode.appendNode('version', dp.version)
-                    }
-                }
-            }
-        }
-    }
+publish {
+    groupId = 'com.github.rubixhacker'
+    artifactId = project.name
+    publishVersion = project.version
+    desc = 'Library that helps a few lines of code to get pictures and video from the android file system, or ures cloud, as well as the camera device.'
+    licences = ['Apache-2.0']
+    uploadName='Kontact'
+    website = 'https://github.com/stfalcon-studio/ContentManager.git'
 }
+
+//publishing {
+//    publications {
+//        aar(MavenPublication) {
+//            groupId = "com.hackedcube"
+//            artifactId project.name
+//            version = project.version
+//            artifact "${project.buildDir}/outputs/aar/${project.name}-release.aar"
+//
+//
+//            pom.withXml {
+//                def root = asNode()
+//
+//                // adds dependencies
+//                def dependenciesNode = root.appendNode('dependencies')
+//                configurations.compile.allDependencies.each { dp ->
+//                    if (dp.group) {
+//                        def dependencyNode = dependenciesNode.appendNode('dependency')
+//                        dependencyNode.appendNode('groupId', dp.group)
+//                        dependencyNode.appendNode('artifactId', dp.name)
+//                        dependencyNode.appendNode('version', dp.version)
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
 dependencies {
     compile 'com.android.support:support-annotations:25.3.1'

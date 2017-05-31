@@ -7,8 +7,6 @@ import com.gabrielittner.auto.value.cursor.ColumnTypeAdapter
 import com.hackedcube.kontact.PhoneNumber
 import com.hackedcube.kontact.toFlag
 
-
-
 class PhoneTypeIntAdapter : ColumnTypeAdapter<PhoneNumber.Type> {
 
     override fun fromCursor(cursor: Cursor, columnName: String): PhoneNumber.Type {
