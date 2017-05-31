@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 25
@@ -15,7 +16,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -27,17 +28,51 @@ android {
     publishNonDefault true
 }
 
+
+publish {
+    groupId = 'com.github.rubixhacker'
+    artifactId = project.name
+    publishVersion = project.version
+    desc = 'Library that helps a few lines of code to get pictures and video from the android file system, or ures cloud, as well as the camera device.'
+    licences = ['Apache-2.0']
+    uploadName='Kontact'
+    website = 'https://github.com/stfalcon-studio/ContentManager.git'
+}
+
+//publishing {
+//    publications {
+//        aar(MavenPublication) {
+//            groupId = "com.hackedcube"
+//            artifactId project.name
+//            version = project.version
+//            artifact "${project.buildDir}/outputs/aar/${project.name}-release.aar"
+//
+//
+//            pom.withXml {
+//                def root = asNode()
+//
+//                // adds dependencies
+//                def dependenciesNode = root.appendNode('dependencies')
+//                configurations.compile.allDependencies.each { dp ->
+//                    if (dp.group) {
+//                        def dependencyNode = dependenciesNode.appendNode('dependency')
+//                        dependencyNode.appendNode('groupId', dp.group)
+//                        dependencyNode.appendNode('artifactId', dp.name)
+//                        dependencyNode.appendNode('version', dp.version)
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
+
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:support-annotations:25.3.1'
     testCompile 'junit:junit:4.12'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    kapt "com.google.auto.value:auto-value:1.4"
-    provided "com.google.auto.value:auto-value:1.4"
+    kapt 'com.google.auto.value:auto-value:1.4'
+    provided 'com.google.auto.value:auto-value:1.4'
     kapt 'com.gabrielittner.auto.value:auto-value-with:1.0.0'
     kapt 'com.gabrielittner.auto.value:auto-value-cursor:1.0.1'
     compile 'com.gabrielittner.auto.value:auto-value-cursor-annotations:1.0.1'
