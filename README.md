@@ -1,6 +1,6 @@
 # Kontact
 
-A mapper around que
+A mapper around Android's Contact APIs
 
 ## Import the Dependency [ ![Download](https://api.bintray.com/packages/rubixhacker/Kontact/Kontact/images/download.svg) ](https://bintray.com/rubixhacker/Kontact/Kontact/_latestVersion)
 
@@ -10,26 +10,29 @@ To import the Android SDK, include it as a dependency in your build.gradle file
 
 
 ## Usage
-
+   
 To get all Contacts on the user's device
 
-#####Java
-    List<Kontact> kontacts = ContactUtils.queryAllContacts(this);
-
-#####Kotlin
-    val context = ...
+##### Java
+```java
+List<Kontact> kontacts = ContactUtils.queryAllContacts(this);
+```
+##### Kotlin
+```kotlin
+val context = ...
         
-    val kontactList: List<Kontact> = context.queryAllContacts()
-    
-    
-    
+val kontactList: List<Kontact> = context.queryAllContacts()
+```
+
 To get a specific Contact from an id
 
-#####Java
-    Kontact kontact = ContactUtils.getContactFromId(this, <id>);
-    
-#####Kotlin
-    
-     val context = ...
+##### Java
+```java
+Kontact kontact = ContactUtils.getContactFromId(this, <id>);
+```
+##### Kotlin
+```kotlin    
+val context = ...
             
-     val kontact: Kontact = context.getContactFromId(<id>)
+val kontact: Kontact = context.getContactFromId(<id>)
+```
