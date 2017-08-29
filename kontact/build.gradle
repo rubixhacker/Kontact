@@ -48,4 +48,30 @@ repositories {
     mavenCentral()
 }
 
-apply from: 'https://raw.githubusercontent.com/blundell/release-android-library/master/android-release-aar.gradle'
+
+ext {
+    bintrayRepo = 'Kontact'
+    bintrayName = 'Kontact'
+
+    publishedGroupId = 'com.hackedcube'
+    libraryName = 'Kontact'
+    artifact = 'kontact'
+
+    libraryDescription = 'Full object mapping and querying of the Android Contact API'
+
+    siteUrl = 'https://github.com/rubixhacker/Kontact'
+    gitUrl = 'https://github.com/rubixhacker/Kontact.git'
+
+    libraryVersion = '0.2.0'
+
+    developerId = 'rubixhacker'
+    developerName = 'Stewart Boling'
+    developerEmail = 'rubixhacker@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
