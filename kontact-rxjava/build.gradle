@@ -12,45 +12,11 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
+
+
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
-    }
-
-    publishNonDefault true
-}
-
-publishing {
-    publications {
-        aar(MavenPublication) {
-            groupId = "com.hackedcube"
-            artifactId project.name
-            version = project.version
-            artifact "${project.buildDir}/outputs/aar/${project.name}-release.aar"
-
-
-            pom.withXml {
-                def root = asNode()
-
-
-                // adds dependencies
-                def dependenciesNode = root.appendNode('dependencies')
-                configurations.compile.allDependencies.each { dp ->
-                    if (dp.group) {
-                        def dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', dp.group)
-                        dependencyNode.appendNode('artifactId', dp.name)
-                        dependencyNode.appendNode('version', dp.version)
-                    }
-                }
-            }
-        }
     }
 }
 
@@ -66,3 +32,36 @@ dependencies {
 
     compile 'io.reactivex:rxjava:1.2.9'
 }
+
+def artifactVersion = properties.version
+
+ext {
+    bintrayRepo = 'Kontact'
+    bintrayName = 'Kontact-rxJava'
+
+    publishedGroupId = 'com.hackedcube'
+    libraryName = 'Kontact'
+    artifact = 'kontact-rxjava'
+
+    libraryDescription = 'Full object mapping and querying of the Android Contact API'
+
+    siteUrl = 'https://github.com/rubixhacker/Kontact'
+    gitUrl = 'https://github.com/rubixhacker/Kontact.git'
+
+    libraryVersion = artifactVersion
+
+    developerId = 'rubixhacker'
+    developerName = 'Stewart Boling'
+    developerEmail = 'rubixhacker@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+tasks.withType(Javadoc).all {
+    enabled = false
+}
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
