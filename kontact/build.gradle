@@ -11,26 +11,15 @@ android {
         targetSdkVersion 25
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-    }
-    buildTypes {
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
     }
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
-    publishNonDefault true
-}
-
-ext {
-    PUBLISH_GROUP_ID = 'com.hackedcube'
-    PUBLISH_ARTIFACT_ID = 'kontact'
-    PUBLISH_VERSION = version
+    buildTypes {
+        debug {        }
+    }
 }
 
 dependencies {
@@ -48,6 +37,7 @@ repositories {
     mavenCentral()
 }
 
+def artifactVersion = properties.version
 
 ext {
     bintrayRepo = 'Kontact'
@@ -62,7 +52,7 @@ ext {
     siteUrl = 'https://github.com/rubixhacker/Kontact'
     gitUrl = 'https://github.com/rubixhacker/Kontact.git'
 
-    libraryVersion = '0.2.0'
+    libraryVersion = artifactVersion
 
     developerId = 'rubixhacker'
     developerName = 'Stewart Boling'
@@ -71,6 +61,10 @@ ext {
     licenseName = 'The Apache Software License, Version 2.0'
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     allLicenses = ["Apache-2.0"]
+}
+
+tasks.withType(Javadoc).all {
+    enabled = false
 }
 
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
