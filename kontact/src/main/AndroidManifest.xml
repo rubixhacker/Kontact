@@ -1,1 +1,6 @@
-<manifest package="com.hackedcube.kontact" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.hackedcube.kontact">
+
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+</manifest>
