@@ -1,5 +1,4 @@
 @file:JvmName("RxContactUtils")
-@file:JvmMultifileClass
 
 package com.hackedcube.kontact.rxjava
 
