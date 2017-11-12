@@ -8,7 +8,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.ContactsContract
 
-fun Context.queryAllContacts(): List<Kontact> {
+public fun Context.queryAllContacts(): List<Kontact> {
     contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null).use {
         return generateSequence { if (it.moveToNext()) it else null }
                 .map { kontactFromCursor(this, it) }
@@ -16,7 +16,7 @@ fun Context.queryAllContacts(): List<Kontact> {
     }
 }
 
-fun Context.getContactFromId(uri: Uri): Kontact? {
+public fun Context.getContactFromId(uri: Uri): Kontact? {
     contentResolver.query(uri, null, null, null, null).use { cursorContact ->
         cursorContact.moveToFirst()
         return kontactFromCursor(this, cursorContact)
