@@ -52,7 +52,10 @@ private fun kontactFromCursor(context: Context, cursor: Cursor): Kontact {
             ContactsContract.Data.MIMETYPE,
             ContactsContract.CommonDataKinds.Relation.CONTACT_ID)
 
-    val whereParams = arrayOf(ContactsContract.CommonDataKinds.Relation.CONTENT_ITEM_TYPE, kontact.id()))
+    val whereParams = arrayOf(
+            ContactsContract.CommonDataKinds.Relation.CONTENT_ITEM_TYPE,
+            kontact.id()
+    )
 
     context.contentResolver.query(ContactsContract.Data.CONTENT_URI, null, where, whereParams, null).use { dataCursor ->
         val relation = Relation.create(dataCursor)
