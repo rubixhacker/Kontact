@@ -28,7 +28,7 @@ public abstract class PhoneNumber {
     @ColumnName(ContactsContract.CommonDataKinds.Phone.LABEL)
     public abstract String label();
 
-    public static PhoneNumber createfromCursor(Cursor cursor) {
+    public static PhoneNumber create(Cursor cursor) {
         return AutoValue_PhoneNumber.createFromCursor(cursor);
     }
 

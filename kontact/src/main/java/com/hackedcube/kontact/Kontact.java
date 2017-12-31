@@ -67,6 +67,8 @@ public abstract class Kontact {
     @Nullable
     public abstract List<EmailAddress> emailAddresses();
 
+    @Nullable
+    public abstract Relation relation();
 
     public static Kontact create(Cursor cursor) {
         return AutoValue_Kontact.createFromCursor(cursor);
@@ -81,6 +83,8 @@ public abstract class Kontact {
     public abstract Kontact withPhoneNumbers(List<PhoneNumber> phoneNumbers);
 
     public abstract Kontact withEmailAddresses(List<EmailAddress> emailAddresses);
+
+    public abstract Kontact withRelation(Relation relation);
 
     @AutoValue.Builder
     public abstract static class Builder {
@@ -113,6 +117,8 @@ public abstract class Kontact {
         public abstract Builder phoneNumbers(List<PhoneNumber> phoneNumbers);
 
         public abstract Builder emailAddresses(List<EmailAddress> emailAddresses);
+
+        public abstract Builder relation(Relation relation);
 
         public abstract Kontact build();
     }

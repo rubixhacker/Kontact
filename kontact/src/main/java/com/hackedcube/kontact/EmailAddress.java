@@ -26,7 +26,7 @@ public abstract class EmailAddress {
     @ColumnName(ContactsContract.CommonDataKinds.Email.LABEL)
     public abstract String label();
 
-    public static EmailAddress createfromCursor(Cursor cursor) {
+    public static EmailAddress create(Cursor cursor) {
         return AutoValue_EmailAddress.createFromCursor(cursor);
     }
 
