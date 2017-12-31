@@ -67,7 +67,8 @@ public abstract class Kontact {
     @Nullable
     public abstract List<EmailAddress> emailAddresses();
 
-    public static Kontact createfromCursor(Cursor cursor) {
+
+    public static Kontact create(Cursor cursor) {
         return AutoValue_Kontact.createFromCursor(cursor);
     }
 
