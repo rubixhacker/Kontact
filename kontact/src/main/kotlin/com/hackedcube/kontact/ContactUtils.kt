@@ -58,9 +58,9 @@ private fun kontactFromCursor(context: Context, cursor: Cursor): Kontact {
     context.contentResolver.query(ContactsContract.Data.CONTENT_URI, null, where, whereParams, null).use { dataCursor ->
         val relation = dataCursor.toSequence()
                 .map { Relation.create(it) }
-                .firstOrNull()
+                .toList()
 
-        relation?.let { kontact = kontact.withRelation(it) }
+        kontact = kontact.withRelations(relation)
     }
 
 
