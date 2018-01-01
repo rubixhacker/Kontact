@@ -29,7 +29,7 @@ private fun kontactFromCursor(context: Context, cursor: Cursor): Kontact {
     // Fetch Phone Numbers
     if (kontact.hasPhoneNumber()) {
         context.contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", arrayOf(kontact.id()), null).use { phoneCursor ->
-            val phoneNumbers = generateSequence { if (phoneCursor.moveToNext()) phoneCursor else null }
+            val phoneNumbers = phoneCursor.toSequence()
                     .map { PhoneNumber.create(it) }
                     .toList()
 
@@ -39,18 +39,16 @@ private fun kontactFromCursor(context: Context, cursor: Cursor): Kontact {
 
     // Fetch Email addresses
     context.contentResolver.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?", arrayOf(kontact.id()), null).use { emailCursor ->
-        val emailAddresses = generateSequence { if (emailCursor.moveToNext()) emailCursor else null }
+        val emailAddresses = emailCursor.toSequence()
                 .map { EmailAddress.create(it) }
                 .toList()
 
         kontact = kontact.withEmailAddresses(emailAddresses)
     }
 
+
     // Fetch additional info
-    val where = String.format(
-            "%s = ? AND %s = ?",
-            ContactsContract.Data.MIMETYPE,
-            ContactsContract.CommonDataKinds.Relation.CONTACT_ID)
+    val where = "${ContactsContract.Data.MIMETYPE} = ? AND ${ContactsContract.Data.CONTACT_ID} = ?"
 
     val whereParams = arrayOf(
             ContactsContract.CommonDataKinds.Relation.CONTENT_ITEM_TYPE,
@@ -58,9 +56,11 @@ private fun kontactFromCursor(context: Context, cursor: Cursor): Kontact {
     )
 
     context.contentResolver.query(ContactsContract.Data.CONTENT_URI, null, where, whereParams, null).use { dataCursor ->
-        val relation = Relation.create(dataCursor)
+        val relation = dataCursor.toSequence()
+                .map { Relation.create(it) }
+                .firstOrNull()
 
-        kontact = kontact.withRelation(relation)
+        relation?.let { kontact = kontact.withRelation(it) }
     }
 
 
