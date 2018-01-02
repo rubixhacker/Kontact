@@ -16,7 +16,7 @@ public abstract class Relation {
     public abstract String name();
 
     @ColumnAdapter(RelationTypeIntAdapter.class)
-    @ColumnName(ContactsContract.CommonDataKinds.Phone.TYPE)
+    @ColumnName(ContactsContract.CommonDataKinds.Relation.TYPE)
     public abstract Relation.Type type();
 
     @Nullable

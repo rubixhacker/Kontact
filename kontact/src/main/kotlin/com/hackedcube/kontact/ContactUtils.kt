@@ -46,21 +46,46 @@ private fun kontactFromCursor(context: Context, cursor: Cursor): Kontact {
         kontact = kontact.withEmailAddresses(emailAddresses)
     }
 
+    val select = arrayOf(ContactsContract.Data.MIMETYPE, "data1", "data2", "data3", "data4",
+            "data5", "data6", "data7", "data8", "data9", "data10", "data11", "data12", "data13",
+            "data14", "data15")
 
     // Fetch additional info
-    val where = "${ContactsContract.Data.MIMETYPE} = ? AND ${ContactsContract.Data.CONTACT_ID} = ?"
+    val where = "${ContactsContract.Data.CONTACT_ID} = ? AND ${ContactsContract.Data.MIMETYPE} IN (?, ?, ?, ?)"
 
     val whereParams = arrayOf(
+            kontact.id(),
+            ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE,
+            ContactsContract.CommonDataKinds.Nickname.CONTENT_ITEM_TYPE,
             ContactsContract.CommonDataKinds.Relation.CONTENT_ITEM_TYPE,
-            kontact.id()
+            ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE
     )
 
-    context.contentResolver.query(ContactsContract.Data.CONTENT_URI, null, where, whereParams, null).use { dataCursor ->
-        val relation = dataCursor.toSequence()
-                .map { Relation.create(it) }
-                .toList()
+    context.contentResolver.query(ContactsContract.Data.CONTENT_URI, select, where, whereParams, null).use { dataCursor ->
 
-        kontact = kontact.withRelations(relation)
+        val data = dataCursor.toSequence()
+                .map {
+                    val columnType = it.getString(it.getColumnIndex(ContactsContract.Data.MIMETYPE))
+
+                    when(columnType) {
+                        ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE -> columnType to Event.create(it)
+                        ContactsContract.CommonDataKinds.Nickname.CONTENT_ITEM_TYPE -> columnType to Nickname.create(it)
+                        ContactsContract.CommonDataKinds.Relation.CONTENT_ITEM_TYPE -> columnType to Relation.create(it)
+                        ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE -> columnType to PostalAddress.create(it)
+                        else -> columnType to null
+                    }
+                }
+                .groupBy({it.first}, {it.second})
+
+
+
+
+        kontact = kontact.toBuilder()
+                .events(data[ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE] as MutableList<Event>?)
+                .nicknames(data[ContactsContract.CommonDataKinds.Nickname.CONTENT_ITEM_TYPE] as MutableList<Nickname>?)
+                .postalAddresses(data[ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE] as MutableList<PostalAddress>?)
+                .relations(data[ContactsContract.CommonDataKinds.Relation.CONTENT_ITEM_TYPE] as MutableList<Relation>?)
+                .build()
     }
 
 
