@@ -1,5 +1,6 @@
 package com.hackedcube.kontact.sample;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,12 @@ import android.widget.Button;
 
 import com.hackedcube.kontact.ContactUtils;
 import com.hackedcube.kontact.Kontact;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.List;
 
@@ -23,19 +30,44 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
 
-        Button buttonImportContanct = (Button) findViewById(R.id.buttonImport);
+        Dexter.withActivity(this)
+                .withPermission(Manifest.permission.READ_CONTACTS)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+                        // NO OP
+                    }
 
-        buttonImportContanct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                startActivityForResult(intent, PICK_CONTACT);
-            }
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+                        // NO-OP
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                })
+                .check();
+
+
+        Button buttonImportContact = (Button) findViewById(R.id.buttonImport);
+
+        buttonImportContact.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+            startActivityForResult(intent, PICK_CONTACT);
         });
 
-        List<Kontact> kontacts = ContactUtils.queryAllContacts(this);
 
-        Log.d("Kontacts", "Kontacts Count: " + kontacts);
+        Button buttonImportAllContact = (Button) findViewById(R.id.buttonImportAllContacts);
+
+
+        buttonImportAllContact.setOnClickListener(v -> {
+            List<Kontact> kontacts = ContactUtils.queryAllContacts(this);
+            Log.d("Kontacts", "Kontacts Count: " + kontacts);
+        });
+
+
 
     }
 
