@@ -76,6 +76,9 @@ public abstract class Kontact {
     @Nullable
     public abstract List<Nickname> nicknames();
 
+    @Nullable
+    public abstract List<Event> events();
+
     public static Kontact create(Cursor cursor) {
         return AutoValue_Kontact.createFromCursor(cursor);
     }
@@ -127,6 +130,8 @@ public abstract class Kontact {
         public abstract Builder postalAddresses(List<PostalAddress> postalAddresses);
 
         public abstract Builder nicknames(List<Nickname> nicknames);
+
+        public abstract Builder events(List<Event> events);
 
         public abstract Kontact build();
     }

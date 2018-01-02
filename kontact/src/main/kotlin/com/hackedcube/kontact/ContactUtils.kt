@@ -51,10 +51,11 @@ private fun kontactFromCursor(context: Context, cursor: Cursor): Kontact {
             "data14", "data15")
 
     // Fetch additional info
-    val where = "${ContactsContract.Data.CONTACT_ID} = ? AND ${ContactsContract.Data.MIMETYPE} IN (?, ?, ?)"
+    val where = "${ContactsContract.Data.CONTACT_ID} = ? AND ${ContactsContract.Data.MIMETYPE} IN (?, ?, ?, ?)"
 
     val whereParams = arrayOf(
             kontact.id(),
+            ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE,
             ContactsContract.CommonDataKinds.Nickname.CONTENT_ITEM_TYPE,
             ContactsContract.CommonDataKinds.Relation.CONTENT_ITEM_TYPE,
             ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE
@@ -67,6 +68,7 @@ private fun kontactFromCursor(context: Context, cursor: Cursor): Kontact {
                     val columnType = it.getString(it.getColumnIndex(ContactsContract.Data.MIMETYPE))
 
                     when(columnType) {
+                        ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE -> columnType to Event.create(it)
                         ContactsContract.CommonDataKinds.Nickname.CONTENT_ITEM_TYPE -> columnType to Nickname.create(it)
                         ContactsContract.CommonDataKinds.Relation.CONTENT_ITEM_TYPE -> columnType to Relation.create(it)
                         ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE -> columnType to PostalAddress.create(it)
@@ -79,6 +81,7 @@ private fun kontactFromCursor(context: Context, cursor: Cursor): Kontact {
 
 
         kontact = kontact.toBuilder()
+                .events(data[ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE] as MutableList<Event>?)
                 .nicknames(data[ContactsContract.CommonDataKinds.Nickname.CONTENT_ITEM_TYPE] as MutableList<Nickname>?)
                 .postalAddresses(data[ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE] as MutableList<PostalAddress>?)
                 .relations(data[ContactsContract.CommonDataKinds.Relation.CONTENT_ITEM_TYPE] as MutableList<Relation>?)
