@@ -48,19 +48,33 @@ private fun kontactFromCursor(context: Context, cursor: Cursor): Kontact {
 
 
     // Fetch additional info
-    val where = "${ContactsContract.Data.MIMETYPE} = ? AND ${ContactsContract.Data.CONTACT_ID} = ?"
+    val where = "${ContactsContract.Data.CONTACT_ID} = ? AND ${ContactsContract.Data.MIMETYPE} IN (?, ?)"
 
     val whereParams = arrayOf(
+            kontact.id(),
             ContactsContract.CommonDataKinds.Relation.CONTENT_ITEM_TYPE,
-            kontact.id()
+            ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE
     )
 
     context.contentResolver.query(ContactsContract.Data.CONTENT_URI, null, where, whereParams, null).use { dataCursor ->
-        val relation = dataCursor.toSequence()
-                .map { Relation.create(it) }
-                .toList()
 
-        kontact = kontact.withRelations(relation)
+        val data = dataCursor.toSequence()
+                .map {
+                    val columnType = it.getString(it.getColumnIndex(ContactsContract.Data.MIMETYPE))
+
+                    when(columnType) {
+                        ContactsContract.CommonDataKinds.Relation.CONTENT_ITEM_TYPE -> columnType to Relation.create(it)
+                        ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE -> columnType to PostalAddress.create(it)
+                        else -> columnType to null
+                    }
+                }
+                .groupBy({it.first}, {it.second})
+
+
+        kontact = kontact.toBuilder()
+                .postalAddresses(data[ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE] as List<PostalAddress>)
+                .relations(data[ContactsContract.CommonDataKinds.Relation.CONTENT_ITEM_TYPE] as List<Relation>)
+                .build()
     }
 
 

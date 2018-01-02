@@ -70,6 +70,9 @@ public abstract class Kontact {
     @Nullable
     public abstract List<Relation> relations();
 
+    @Nullable
+    public abstract List<PostalAddress> postalAddresses();
+
     public static Kontact create(Cursor cursor) {
         return AutoValue_Kontact.createFromCursor(cursor);
     }
@@ -85,6 +88,8 @@ public abstract class Kontact {
     public abstract Kontact withEmailAddresses(List<EmailAddress> emailAddresses);
 
     public abstract Kontact withRelations(List<Relation> relations);
+
+    public abstract Kontact withPostalAddress(List<PostalAddress> postalAddresses);
 
     @AutoValue.Builder
     public abstract static class Builder {
@@ -119,6 +124,8 @@ public abstract class Kontact {
         public abstract Builder emailAddresses(List<EmailAddress> emailAddresses);
 
         public abstract Builder relations(List<Relation> relations);
+
+        public abstract Builder postalAddresses(List<PostalAddress> postalAddresses);
 
         public abstract Kontact build();
     }
