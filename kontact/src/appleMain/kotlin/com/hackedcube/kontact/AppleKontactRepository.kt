@@ -7,14 +7,16 @@ import platform.Contacts.CNContactFetchRequest
 import platform.Contacts.CNContactFormatter
 import platform.Contacts.CNContactFormatterStyle
 import platform.Contacts.CNContactStore
-import platform.Contacts.CNEntityType
 import platform.Contacts.CNLabelHome
 import platform.Contacts.CNLabelOther
 import platform.Contacts.CNLabelPhoneNumberMobile
 import platform.Contacts.CNLabelWork
-import platform.Foundation.NSError
 
-class IosKontactRepository : KontactRepository {
+/**
+ * Apple-platform implementation of [KontactRepository] using the CNContacts framework.
+ * Shared by iOS and macOS targets.
+ */
+class AppleKontactRepository : KontactRepository {
 
     private val store = CNContactStore()
 
@@ -23,7 +25,6 @@ class IosKontactRepository : KontactRepository {
         val keysToFetch = contactKeysToFetch()
         val request = CNContactFetchRequest(keysToFetch = keysToFetch)
 
-        val error: NSError? = null
         store.enumerateContactsWithFetchRequest(request, error = null) { contact, _ ->
             if (contact != null) {
                 contacts += contact.toKontact()

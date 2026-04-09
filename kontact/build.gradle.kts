@@ -27,10 +27,16 @@ kotlin {
         }
     }
 
+    macosX64()
+    macosArm64()
+
     @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
     wasmJs {
         browser()
     }
+
+    // Default hierarchy template creates appleMain automatically,
+    // shared by iosMain + macosMain — CNContacts code lives there.
 
     sourceSets {
         commonMain.dependencies {

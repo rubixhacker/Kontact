@@ -13,11 +13,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,15 +29,45 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.hackedcube.kontact.Kontact
 import com.hackedcube.kontact.KontactRepository
+import dev.icerock.moko.permissions.Permission
+import dev.icerock.moko.permissions.PermissionState
+import dev.icerock.moko.permissions.compose.BindEffect
+import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App(repository: KontactRepository) {
     MaterialTheme {
+        val scope = rememberCoroutineScope()
         var contacts by remember { mutableStateOf<List<Kontact>>(emptyList()) }
         var loading by remember { mutableStateOf(false) }
-        val scope = rememberCoroutineScope()
+        var permissionGranted by remember { mutableStateOf(false) }
+        var permissionDenied by remember { mutableStateOf(false) }
+
+        val factory = rememberPermissionsControllerFactory()
+        val controller = remember(factory) { factory.createPermissionsController() }
+        BindEffect(controller)
+
+        fun loadContacts() {
+            loading = true
+            scope.launch {
+                val state = controller.getPermissionState(Permission.CONTACTS)
+                if (state == PermissionState.Granted) {
+                    permissionGranted = true
+                    contacts = repository.queryAllContacts()
+                } else {
+                    try {
+                        controller.providePermission(Permission.CONTACTS)
+                        permissionGranted = true
+                        contacts = repository.queryAllContacts()
+                    } catch (_: Exception) {
+                        permissionDenied = true
+                    }
+                }
+                loading = false
+            }
+        }
 
         Scaffold(
             topBar = {
@@ -49,13 +79,7 @@ fun App(repository: KontactRepository) {
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Button(
-                    onClick = {
-                        loading = true
-                        scope.launch {
-                            contacts = repository.queryAllContacts()
-                            loading = false
-                        }
-                    },
+                    onClick = { loadContacts() },
                     enabled = !loading,
                 ) {
                     Text(if (loading) "Loading..." else "Import All Contacts")
@@ -63,10 +87,17 @@ fun App(repository: KontactRepository) {
 
                 Spacer(Modifier.height(8.dp))
 
-                Text(
-                    text = "${contacts.size} contacts loaded",
-                    style = MaterialTheme.typography.bodyMedium,
-                )
+                when {
+                    permissionDenied -> Text(
+                        text = "Contacts permission denied",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                    contacts.isNotEmpty() -> Text(
+                        text = "${contacts.size} contacts loaded",
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
 
                 Spacer(Modifier.height(16.dp))
 

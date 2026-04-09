@@ -29,6 +29,13 @@ kotlin {
         }
     }
 
+    macosX64 {
+        binaries.executable { entryPoint = "com.hackedcube.kontact.sample.main" }
+    }
+    macosArm64 {
+        binaries.executable { entryPoint = "com.hackedcube.kontact.sample.main" }
+    }
+
     @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
     wasmJs {
         browser()
@@ -43,6 +50,8 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.components.resources)
             implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.moko.permissions.core)
+            implementation(libs.moko.permissions.compose)
         }
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
